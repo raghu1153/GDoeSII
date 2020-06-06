@@ -7,13 +7,21 @@ profiles into GDSII layouts for further lithography/fabrication process.
 
 # Setup and requirements python 2.7. (For Python 3 checkout the other git branch)
 
-The Python code is for Python 2.7. The following packages must be installed before running the source code.
+The Python code is for Python 3.x. The following packages must be installed before running the source code.
 1. gdsCAD 
+** Note ** The current gdsCAD from PyPI wont support Python 3.0. You must build and install the python 3 compatible gdsCAD from github
+from the following link.
+https://github.com/hohlraum/gdsCAD/tree/2and3. 
+Steps: a. Clone the repo.
+       b. Do git branch -r to see all branches.
+       c. Checkout to the branch named '2and3'
+       d. Run the following command python setup.py install
 2. Numpy
 3. Scipy
 4. Matplotlib
 5. PIL
-6. xlrd
+6. tkinter
+7. imageio
 
 The source files can be found in the src folder. The main python file of the software is GDoeSII.py, which contains all the code for GUI and framework of the software. 
 
