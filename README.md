@@ -5,7 +5,7 @@
 GDoeSII can compute scalar diffraction patterns of a given input phase and amplitude profile. It can also convert the phase
 profiles into GDSII layouts for further lithography/fabrication process.
 
-# Setup and requirements python 2.7. (For Python 3 checkout the other git branch)
+# Setup and requirements python 3.x 
 
 The Python code is for Python 3.x. The following packages must be installed before running the source code.
 1. gdsCAD 
