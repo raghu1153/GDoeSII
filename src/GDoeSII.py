@@ -10,16 +10,16 @@ __email__ = "raghu1153@gmail.com"
 __status__ = "Production"
 
 
-from Tkinter import *
-import tkFileDialog
+from tkinter import *
+import tkinter.filedialog 
 from PIL import ImageTk, Image
 import numpy as np
 from gdsCAD import core, shapes
-from scipy import misc
+import imageio
 import os
 import time
-import ttk
-from ttk import Progressbar
+import tkinter.ttk as ttk
+from tkinter.ttk import Progressbar
 import pylab as py
 
 #############Instructions################
@@ -36,7 +36,7 @@ def resource_path(relative_path):
         base_path = os.path.join(sys._MEIPASS, 'data')
     except Exception:
         # sys._MEIPASS is not defined, so use the original path
-        base_path = 'E://myenv//GDoeSII'
+        base_path = '/home/raghu/pythonProjects/GDoeSII/src'
 
     return os.path.join(base_path, relative_path)
 
@@ -45,15 +45,15 @@ root = Tk()
 style = ttk.Style(root)
 style.theme_use("clam")
 style.configure('Normal.TButton')
-style.configure('TButton', foreground='black',background = 'gray',activeforeground = 'SkyBlue1',font = ("calibri 15 bold"),bordercolor = 'blue')
+style.configure('TButton', foreground='black',background = 'gray',activeforeground = 'SkyBlue1',font = ("calibri 12 bold"),bordercolor = 'blue')
 style.configure("TProgressbar", foreground='black', background='forest green')
 style.configure('New.TButton', foreground='black',background = 'gray',activeforeground = 'SkyBlue1', font=('calibri bold', 11),bordercolor = 'blue')
 style.configure('GDS.TButton', foreground='black',background = 'PeachPuff2',activeforeground = 'SkyBlue1', font=('calibri bold', 9),bordercolor = 'blue')
-style.configure('TLabel', foreground='black',background = 'gray',font = ("calibri 13"))
+style.configure('TLabel', foreground='black',background = 'gray',font = ("calibri 11"))
 ###Starting Window###
 root.title('GDoeSII')
-root.geometry("720x520") #You want the size of the app to be 620x400
-root.iconbitmap(resource_path('logo.ico'))
+root.geometry("820x590") #You want the size of the app to be 620x400
+#root.iconbitmap(resource_path('logo.ico'))
 root.resizable(0, 0) #Don't allow resizing in the x or y direction
 fileLoc = StringVar(root)
 unit= None
@@ -62,9 +62,9 @@ im = None
 mode = None
 rightFrame = Frame(root, borderwidth = 1, relief = RAISED, padx = 0, pady = 0) 
 #rightFrame.pack_propagate(0)
-rightFrame.pack(side = RIGHT, pady = 5, fill = X)
+rightFrame.pack(side = RIGHT, fill =X, expand = True)
 rightFrame.bind("<1>", lambda event: rightFrame.focus_set())
-leftFrame = Frame(root,relief=SUNKEN, borderwidth=1, pady = 15, padx = 12,bg = 'gray85')
+leftFrame = Frame(root,relief=SUNKEN, borderwidth=1, pady = 15 , padx = 12,bg = 'gray85')
 leftFrame.pack(side = LEFT)
 leftFrame.bind("<1>", lambda event: leftFrame.focus_set())
 
@@ -72,8 +72,8 @@ leftFrame.bind("<1>", lambda event: leftFrame.focus_set())
 rm = Image.open(resource_path('Instructions.png'))
 width, height = rm.size
 m = max(width,height)
-if m > 515:
-    scale = 515.0/m
+if m > 580:
+    scale = 580.0/m
     rm = rm.resize((int(width*scale), int(height*scale)), Image.ANTIALIAS)
 rm = ImageTk.PhotoImage(rm)
 redLabel = Label(rightFrame,image = rm)
@@ -85,7 +85,7 @@ def Handler():
     global im
     global fileLoc
     global globIm
-    fileLoc = tkFileDialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Supported formats","*.jpg"),("Supported formats","*.png"),("Supported formats","*.jpeg")))
+    fileLoc = tkinter.filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Supported formats","*.jpg"),("Supported formats","*.png"),("Supported formats","*.jpeg")))
     if fileLoc == "":
         ReadMe()
     else:
@@ -123,7 +123,7 @@ def gdsConv(u,m):
             label.pack(padx = 60)
             l2 = Label(rightFrame, text = ' Please select valid unit and Layers! ',relief = RAISED, font = 'calibri 15 bold', fg = 'red').pack(padx = 60, pady = 10) 
         else:
-            saveLoc =  tkFileDialog.asksaveasfilename()
+            saveLoc =  tkinter.filedialog.asksaveasfilename()
             if saveLoc == None or saveLoc == "":
                 for widget in rightFrame.winfo_children():
                     widget.destroy()
@@ -146,7 +146,7 @@ def gdsConv(u,m):
                 layout = core.Layout(name,unit)
                 rows = np.arange(height)
                 global imArray
-                imArray = misc.imread(fileLoc, flatten= 1)
+                imArray = imageio.imread(fileLoc, as_gray = True)
                 maxVal = np.max(imArray)
                 minVal = np.min(imArray)
                 bins = []
@@ -220,8 +220,8 @@ def about():
     rm = Image.open(resource_path('Aboutme.png'))
     width, height = rm.size
     m = max(width,height)
-    if m > 515:
-        scale = 515.0/m
+    if m > 580:
+        scale = 580.0/m
         redme = rm.resize((int(width*scale), int(height*scale)), Image.ANTIALIAS)
     readme = ImageTk.PhotoImage(redme)
     redLabel = Label(rightFrame,image = readme)
@@ -243,8 +243,8 @@ def ReadMe():
     rm = Image.open(resource_path('Instructions.png'))
     width, height = rm.size
     m = max(width,height)
-    if m > 515:
-        scale = 515.0/m
+    if m > 580:
+        scale = 580.0/m
         redme = rm.resize((int(width*scale), int(height*scale)), Image.ANTIALIAS)
     readme = ImageTk.PhotoImage(redme)
     redLabel = Label(rightFrame,image = readme)
@@ -258,11 +258,11 @@ def periodicStructures():
     r = IntVar(root)
     for widget in rightFrame.winfo_children():
         widget.destroy()
-    R1 = Radiobutton(rightFrame, text="Triangle", variable=r, value=1,font = 'calibri 12 bold')
+    R1 = Radiobutton(rightFrame, text="Triangle", variable=r, value=1,font = 'calibri 11 bold')
     R1.grid(row = 0, column = 0, sticky = W,rowspan = 2,padx = 25)
-    R2 = Radiobutton(rightFrame, text="Circle", variable=r, value=2,font = 'calibri 12 bold')
+    R2 = Radiobutton(rightFrame, text="Circle", variable=r, value=2,font = 'calibri 11 bold')
     R2.grid(row = 2, column = 0, sticky = W,rowspan = 2,padx =25)
-    R3 = Radiobutton(rightFrame, text="Rectangle", variable=r, value=3,font = 'calibri 12 bold')
+    R3 = Radiobutton(rightFrame, text="Rectangle", variable=r, value=3,font = 'calibri 11 bold')
     R3.grid(row = 4, column = 0, sticky = W,rowspan = 2,padx = 25)
     ima = imMaker(resource_path('Triangle.png'),122)
     la = Label(rightFrame,image = ima)
@@ -277,55 +277,55 @@ def periodicStructures():
     lc.imag = imc
     lc.grid(row = 4, column = 1, sticky = W,rowspan = 2)
     ###Triangle
-    u2 = Label(rightFrame, text="Base: ", font = ("calibri 12 bold"))
+    u2 = Label(rightFrame, text="Base: ", font = ("calibri 11 bold"))
     u2.grid(row = 0, column = 2, sticky = W,padx = 25)#label
     base = IntVar(root)
     v2 = ttk.Entry(rightFrame, textvariable = base, width = 12,cursor = 'xterm')
     v2.grid(row = 0 , column = 3, sticky = W, padx  = 25)#entry textbox
-    u3 = Label(rightFrame, text="Height: ", font = ("calibri 12 bold"))
+    u3 = Label(rightFrame, text="Height: ", font = ("calibri 11 bold"))
     u3.grid(row = 1, column = 2, sticky = W, padx = 25)#label
     height = IntVar(root)
     v3 = ttk.Entry(rightFrame, textvariable = height, width = 12,cursor = 'xterm')
     v3.grid(row = 1 , column = 3, sticky = W, padx  = 25)#entry textbox  
     ###Circle
-    u4 = Label(rightFrame, text="Radius: ", font = ("calibri 12 bold"))
+    u4 = Label(rightFrame, text="Radius: ", font = ("calibri 11 bold"))
     u4.grid(row = 2, column = 2, sticky = W, padx = 25)#label
     radius = IntVar(root)
     v4 = ttk.Entry(rightFrame, textvariable = radius, width = 12,cursor = 'xterm')
     v4.grid(row = 2 , column = 3, sticky = W, padx  = 25)#entry textbox
-    #u5 = Label(rightFrame, text="Eccentricity: ", font = ("calibri 12 bold"))
+    #u5 = Label(rightFrame, text="Eccentricity: ", font = ("calibri 11 bold"))
     #u5.grid(row = 3, column = 2, sticky = W,padx = 15)#label
     #ecc = IntVar(root)
     #v5= Entry(rightFrame, textvariable = ecc, width = 8)
     #v5.grid(row = 3 , column = 3, sticky = W, padx  = 15)#entry textbox    
     #Rectangle
-    u6 = Label(rightFrame, text="Length: ", font = ("calibri 12 bold"))
+    u6 = Label(rightFrame, text="Length: ", font = ("calibri 11 bold"))
     u6.grid(row = 4, column = 2, sticky = W, padx = 25)#label
     leng = IntVar(root)
     v6 = ttk.Entry(rightFrame, textvariable = leng, width = 12,cursor = 'xterm')
     v6.grid(row = 4 , column = 3, sticky = W, padx  = 25)#entry textbox
-    u7 = Label(rightFrame, text="Breadth: ", font = ("calibri 12 bold"))
+    u7 = Label(rightFrame, text="Breadth: ", font = ("calibri 11 bold"))
     u7.grid(row = 5, column = 2, sticky = W,padx  = 25)#label
     breadth = IntVar(root)
     v7= ttk.Entry(rightFrame, textvariable = breadth, width = 12,cursor = 'xterm')
     v7.grid(row = 5 , column = 3, sticky = W,padx = 25)#entry textbox    
     ###Row and Column repetitions
-    u8 = Label(rightFrame, text="Rows: ", font = ("calibri 12 bold"))
+    u8 = Label(rightFrame, text="Rows: ", font = ("calibri 11 bold"))
     u8.grid(row = 6, column = 0, sticky = W,padx  = 25, pady = 15)#label
     rows = IntVar(root)
     v8= ttk.Entry(rightFrame, textvariable = rows, width = 16,cursor = 'xterm')
     v8.grid(row = 6 , column = 1, sticky = W,padx = 10)#entry textbox    
-    u9 = Label(rightFrame, text="Columns: ", font = ("calibri 12 bold"))
+    u9 = Label(rightFrame, text="Columns: ", font = ("calibri 11 bold"))
     u9.grid(row = 6, column = 2, sticky = W,padx  = 25)#label
     cols = IntVar(root)
     v9= ttk.Entry(rightFrame, textvariable = cols, width = 12,cursor = 'xterm')
     v9.grid(row = 6 , column = 3, sticky = W,padx = 25)#entry textbox  
-    u10 = Label(rightFrame, text="Period: ", font = ("calibri 12 bold"))
+    u10 = Label(rightFrame, text="Period: ", font = ("calibri 11 bold"))
     u10.grid(row = 7, column = 0, sticky = W,padx  = 25, pady = 15)#label
     period = IntVar(root)
     v10= ttk.Entry(rightFrame, textvariable = period, width = 16,cursor = 'xterm')
     v10.grid(row = 7 , column = 1, sticky = W,padx = 10,pady = 10)#entry textbox  
-    u11 = Label(rightFrame, text = "Mode:", font = ("calibri 12 bold"))
+    u11 = Label(rightFrame, text = "Mode:", font = ("calibri 11 bold"))
     u11.grid(row = 7, column = 2,padx = 25,sticky = W)#label
     modeList = ["0","1"]
     modeVar=StringVar(root)
@@ -337,7 +337,7 @@ def periodicStructures():
     generate = ttk.Button(rightFrame,text = 'Generate', command = lambda: gdsGenerate(r.get(),v2.get(),v3.get(),v4.get(),v6.get(),v7.get(),v8.get(),v9.get(),v10.get(),modeVar.get()),takefocus=False)
     generate.grid(row = 8,column = 0,sticky = W+E+N+S,pady = 20 )
     m = ''
-    message = Label(rightFrame, text = m, font = 'calibri 12 bold', fg = 'red')
+    message = Label(rightFrame, text = m, font = 'calibri 11 bold', fg = 'red')
     message.grid(row = 8,column = 1,columnspan = 3,sticky = W)
     def gdsGenerate(s,base,height,radius,leng,breadth,rows,cols,period,mod):
         mod = int(mod)
@@ -357,7 +357,7 @@ def periodicStructures():
                 message.text = m    
             else:
                 if rows !=0 and cols != 0 and period !=0 and ( str.isdigit(rows)) and ( str.isdigit(cols)) and ( str.isdigit(period)) :
-                    f = f = tkFileDialog.asksaveasfilename()
+                    f = f = tkinter.filedialog.asksaveasfilename()
                     if f ==None:
                         m = 'Choose a save location!'
                         message.config(text = m, fg = 'red')
@@ -380,7 +380,6 @@ def periodicStructures():
                             rows =int(rows)
                             cols = int(cols)
                             period  = float(period)
-                            print 'hi'
                             for i in range(rows):
                                 for j in range(cols):
                                     points = [(period*j,i*period),(float(base)+period*j,i*period),(float(base)/2.0+period*j,height+i*period)]
@@ -403,7 +402,7 @@ def periodicStructures():
                 message.text = m  
             else:
                 if rows !=0 and cols != 0 and period !=0 and ( str.isdigit(rows)) and ( str.isdigit(cols)) and ( str.isdigit(period)) :
-                    f = tkFileDialog.asksaveasfilename()
+                    f = tkinter.filedialog.asksaveasfilename()
                     if f == None:
                         m = 'Choose a save location!'
                         message.config(text = m, fg = 'red')
@@ -426,7 +425,6 @@ def periodicStructures():
                             rows =int(rows)
                             cols = int(cols)
                             period  = float(period)
-                            print 'hi'
                             for i in range(rows):
                                 for j in range(cols):
                                     cell.add(shapes.Disk((period*j,period*i),float(radius)))
@@ -452,7 +450,7 @@ def periodicStructures():
                 message.text = m    
             else:
                 if rows !=0 and cols != 0 and period !=0 and ( str.isdigit(rows)) and ( str.isdigit(cols)) and ( str.isdigit(period)) :
-                    f = tkFileDialog.asksaveasfilename()
+                    f = tkinter.filedialog.asksaveasfilename()
                     if f ==None:
                         m = 'Choose a save location!'
                         message.config(text = m, fg = 'red')
@@ -475,7 +473,6 @@ def periodicStructures():
                             rows =int(rows)
                             cols = int(cols)
                             period  = float(period)
-                            print 'hi'
                             for i in range(rows):
                                 for j in range(cols):
                                     cell.add(shapes.Rectangle((period*j,period*i),(float(leng)+period*j,float(breadth)+period*i)))
@@ -507,9 +504,9 @@ def diffractiveOptics():
         global im
         global iLoc
         if fl == 0:
-            fLoc = tkFileDialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Supported formats","*.jpg"),("Supported formats","*.png"),("Supported formats","*.jpeg")))
+            fLoc = tkinter.filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Supported formats","*.jpg"),("Supported formats","*.png"),("Supported formats","*.jpeg")))
         else:
-            iLoc = tkFileDialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Supported formats","*.jpg"),("Supported formats","*.png"),("Supported formats","*.jpeg")))
+            iLoc = tkinter.filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("Supported formats","*.jpg"),("Supported formats","*.png"),("Supported formats","*.jpeg")))
         if fl == 0:
             if fLoc == "" or fLoc == None:
                 if fl == 0:
@@ -609,11 +606,11 @@ def diffractiveOptics():
             for widget in frame.winfo_children():
                 widget.destroy()
             userPh=  float(maxPh.get()-minPh.get())
-            phaseProfile = misc.imread(fLoc, flatten = 1)
+            phaseProfile = imageio.imread(fLoc, as_gray = True)
             phaseProfile = (phaseProfile*userPh)/np.max(phaseProfile)
             phaseProfile = np.exp(1j*phaseProfile)
             if iLoc !=None and iLoc != "":
-                Amp = misc.imread(iLoc,flatten = 1)
+                Amp = imageio.imread(iLoc, as_gray = True)
                 Amp = Amp * float(maxAmp.get()-minAmp.get())/np.max(Amp)
                 if Amp.shape == phaseProfile.shape:
                     phaseProfile = np.multiply(Amp,phaseProfile)
@@ -649,7 +646,7 @@ def diffractiveOptics():
             for widget in frame.winfo_children():
                 widget.destroy()
             userPh=  float(maxPh.get()-minPh.get())
-            phaseProfile = misc.imread(fLoc, flatten = 1)
+            phaseProfile = imageio.imread(fLoc, as_gray = True)
             un = px.get()
             (width,height) = phaseProfile.shape
             w = int(width*un)
@@ -657,7 +654,7 @@ def diffractiveOptics():
             phaseProfile = (phaseProfile*userPh)/np.max(phaseProfile)
             phaseProfile = np.exp(1j*phaseProfile)
             if iLoc !=None and iLoc != "":
-                Amp = misc.imread(iLoc,flatten = 1)
+                Amp = imageio.imread(iLoc,as_gray= True)
                 Amp = Amp * float(maxAmp.get()-minAmp.get())/np.max(Amp)
                 if Amp.shape == phaseProfile.shape:
                     phaseProfile = np.multiply(Amp,phaseProfile)
@@ -703,7 +700,7 @@ def diffractiveOptics():
                 message.config(text = m)
                 message.text = m
             else:
-                sL = tkFileDialog.asksaveasfilename()
+                sL = tkinter.filedialog.asksaveasfilename()
                 if sL != None or sL != "":
                     py.imsave(sL+'.png',result0)
                 else: 
@@ -714,14 +711,14 @@ def diffractiveOptics():
                 message.config(text = m)
                 message.text = m
             else:
-                sL = tkFileDialog.asksaveasfilename()
+                sL = tkinter.filedialog.asksaveasfilename()
                 if sL != None or sL != "":
                     py.imsave(sL+'.png',result1)
                 else: 
                     pass
-    Label(rightFrame,text = 'Parameters', justify = CENTER, font = ('calibri 12 bold underline')).grid(row = 0, column = 0, padx = 5)
-    Label(rightFrame,text = 'Input Plane', justify = CENTER, font = ('calibri 12 bold underline')).grid(row = 0, column = 1, padx = 50)
-    Label(rightFrame,text = 'Output Plane', justify = CENTER, font = ('calibri 12 bold underline')).grid(row = 0, column = 2, padx = 60, columnspan = 3)
+    Label(rightFrame,text = 'Parameters', justify = CENTER, font = ('calibri 11 bold underline')).grid(row = 0, column = 0, padx = 5)
+    Label(rightFrame,text = 'Input Plane', justify = CENTER, font = ('calibri 11 bold underline')).grid(row = 0, column = 1, padx = 50)
+    Label(rightFrame,text = 'Output Plane', justify = CENTER, font = ('calibri 11 bold underline')).grid(row = 0, column = 2, padx = 60, columnspan = 3)
     B11 = ttk.Button(rightFrame, text = 'Upload Phase', command = lambda: disp(D11,175, message, 0), takefocus=False, style ='New.TButton',width = 15)
     B11.grid(row = 1, column = 1)
     D11 = Frame(rightFrame)
@@ -780,7 +777,7 @@ def diffractiveOptics():
     sb2.image = saveIcon
     sb2.grid(row = 9, column = 4, sticky = W)
     m = "Message: "
-    message = Label(rightFrame, text = m, font = ("calibri 12 bold"), fg = 'blue')
+    message = Label(rightFrame, text = m, font = ("calibri 11 bold"), fg = 'blue')
     message.pack(side = LEFT, anchor = S)
     message.text = m
     conv = ttk.Button(rightFrame,text = 'Convert to GDSII',command = lambda: gdsConv2(v.get(),dropVar.get(),fLoc,message), takefocus=False, style ='GDS.TButton')
@@ -795,7 +792,7 @@ def gdsConv2(u,m,fLoc,message):
         message.config(text = m)
         message.text = m
     else:
-        imArray = misc.imread(fLoc, flatten= 1)
+        imArray = imageio.imread(fLoc, as_gray = True)
         im = Image.open(fLoc)
         width, height = im.size
         m2 = max(width,height)
@@ -810,7 +807,7 @@ def gdsConv2(u,m,fLoc,message):
             message.config(text = m)
             message.text = m
         else:
-            saveLoc =  tkFileDialog.asksaveasfilename()
+            saveLoc =  tkinter.filedialog.asksaveasfilename()
             if saveLoc == None or saveLoc == "":
                 m = 'Message: Please select a save location! '
                 message.config(text = m)
@@ -880,16 +877,16 @@ def gdsConv2(u,m,fLoc,message):
 
 
 #####Main Layout and Buttons######
-readMe =ttk.Button(leftFrame,text = 'Read Me', command =  ReadMe,width = 14, takefocus=False)
-readMe.grid(row = 0,column = 0, columnspan= 2,padx = 10, pady = 20)
+readMe =ttk.Button(leftFrame,text = 'Read Me', command =  ReadMe, width = 14, takefocus=False)
+readMe.grid(row = 0,column = 0, columnspan= 2,padx = 10, pady = 30)
 periodic = ttk.Button(leftFrame,text = 'Periodic shapes',command =  periodicStructures, width = 14, takefocus=False)
 periodic.grid(row = 1,column = 0, columnspan= 2)
 doe = ttk.Button(leftFrame,text = 'DOE', command =  diffractiveOptics, width = 14,  takefocus=False)
-doe.grid(row = 2,column = 0, columnspan= 2,pady = 20)
+doe.grid(row = 2,column = 0, columnspan= 2,pady = 30)
 imp = ttk.Button(leftFrame,text = 'Import File', command =  Handler, width = 14, takefocus=False)
 imp.grid(row = 3,column = 0, columnspan= 2)
 u = ttk.Label(leftFrame, text="Unit (nm): ")
-u.grid(row = 4, column = 0,pady = 20)#label
+u.grid(row = 4, column = 0,pady = 30)#label
 v = ttk.Entry(leftFrame, textvariable = unit, width = 8,cursor = 'xterm')
 v.grid(row = 4 , column = 1)#entry textbox
 u1 = ttk.Label(leftFrame, text = "Levels:        ")
@@ -901,7 +898,7 @@ popupMenu = ttk.OptionMenu(leftFrame, dropVar,optionList[0], *optionList)
 popupMenu.config(width=4)
 popupMenu.grid(row = 5 , column = 1)
 conv = ttk.Button(leftFrame,text = 'Convert to GDSII', command = lambda: gdsConv(v.get(),dropVar.get()), takefocus=False)
-conv.grid(row = 6,column = 0, pady = 20, columnspan = 2)
+conv.grid(row = 6,column = 0, pady = 30, columnspan = 2)
 periodic = ttk.Button(leftFrame,text = 'About', command =  about,width = 14, takefocus=False)
 periodic.grid(row = 7,column = 0, columnspan= 2,pady = 0)
 
