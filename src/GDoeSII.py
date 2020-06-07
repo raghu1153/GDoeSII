@@ -335,7 +335,7 @@ def periodicStructures():
     modMenu.grid(row = 7 , column = 3, sticky = W,padx = 25)
 
     generate = ttk.Button(rightFrame,text = 'Generate', command = lambda: gdsGenerate(r.get(),v2.get(),v3.get(),v4.get(),v6.get(),v7.get(),v8.get(),v9.get(),v10.get(),modeVar.get()),takefocus=False)
-    generate.grid(row = 8,column = 0,sticky = W+E+N+S,pady = 20 )
+    generate.grid(row = 8,column = 0,sticky = W+E+N+S,pady = 80, padx = 10 )
     m = ''
     message = Label(rightFrame, text = m, font = 'calibri 11 bold', fg = 'red')
     message.grid(row = 8,column = 1,columnspan = 3,sticky = W)
